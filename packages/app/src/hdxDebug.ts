@@ -4,6 +4,7 @@ import HyperDX from '@hyperdx/browser';
 import {
   APP_VERSION,
   BASE_PATH,
+  CHART_SERIES_PALETTE,
   INSTANCE_LABEL,
   IS_ADHOC_FILTERS_ENABLED,
   IS_ALERT_DETAILS_ENABLED,
@@ -88,6 +89,7 @@ const staticFeatures: Record<string, boolean> = {
   alertDetails: IS_ALERT_DETAILS_ENABLED,
   adhocFilters: IS_ADHOC_FILTERS_ENABLED,
   instanceLabel: Boolean(INSTANCE_LABEL),
+  chartSeriesPalette: Boolean(CHART_SERIES_PALETTE),
 };
 
 // config.ts's IS_OSS has a precedence quirk (`?? 'true' === 'true'`), so a set

@@ -27,6 +27,7 @@ import {
   mergePath,
   orderByAfterRemovingSelectItem,
   orderByStringToSortingState,
+  parseSeriesPalette,
   parseTimestampToMs,
   resolveConditionalColor,
   sortingStateToOrderByString,
@@ -1983,5 +1984,34 @@ describe('resolveConditionalColor', () => {
       { operator: 'gte', value: 100, color: 'chart-warning' },
     ];
     expect(resolveConditionalColor(50, rules, undefined)).toBeUndefined();
+  });
+});
+
+describe('parseSeriesPalette', () => {
+  it('keeps the default palette when unset', () => {
+    expect(parseSeriesPalette('')).toBe(COLORS);
+  });
+
+  it('returns the listed colors in order', () => {
+    expect(parseSeriesPalette('#3ca951, #A463F2,#fff')).toEqual([
+      '#3ca951',
+      '#A463F2',
+      '#fff',
+    ]);
+  });
+
+  it('drops invalid entries and warns', () => {
+    const warn = jest.spyOn(console, 'warn').mockImplementation(() => {});
+    expect(parseSeriesPalette('#3ca951,green,#12345')).toEqual(['#3ca951']);
+    expect(warn).toHaveBeenCalledWith(
+      'NEXT_PUBLIC_CHART_SERIES_PALETTE: ignoring invalid colors green, #12345',
+    );
+    warn.mockRestore();
+  });
+
+  it('keeps the default palette when every entry is invalid', () => {
+    jest.spyOn(console, 'warn').mockImplementation(() => {});
+    expect(parseSeriesPalette('green,blue')).toBe(COLORS);
+    jest.restoreAllMocks();
   });
 });

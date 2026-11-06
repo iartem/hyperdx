@@ -95,6 +95,10 @@ export const INSTANCE_LABEL = (env('NEXT_PUBLIC_INSTANCE_LABEL') ?? '')
 // when INSTANCE_LABEL is unset, so `${brandName}${INSTANCE_TITLE_SUFFIX}` is
 // always safe to write regardless of whether a label is configured.
 export const INSTANCE_TITLE_SUFFIX = INSTANCE_LABEL ? ` ${INSTANCE_LABEL}` : '';
+// Comma-separated hex colors (`#rgb` or `#rrggbb`) that chart series take in
+// order, in place of the default categorical palette. Empty keeps the default.
+export const CHART_SERIES_PALETTE =
+  env('NEXT_PUBLIC_CHART_SERIES_PALETTE') ?? '';
 // Alert detail page (/alerts/:id). Default off — currently enabled only in
 // dev (.env.development) and CI (e2e webserver) while the feature bakes.
 export const IS_ALERT_DETAILS_ENABLED =

@@ -20,6 +20,7 @@ import {
 } from '@hyperdx/common-utils/dist/types';
 import { SortingState } from '@tanstack/react-table';
 
+import { CHART_SERIES_PALETTE } from './config';
 import { MetricsDataType, NumberFormat } from './types';
 
 // From: https://usehooks.com/useWindowSize/
@@ -492,9 +493,35 @@ export {
 } from '@hyperdx/common-utils/dist/types';
 export type { ChartPaletteToken };
 
+const HEX_COLOR = /^#(?:[0-9a-f]{3}|[0-9a-f]{6})$/i;
+
 /**
- * Returns the Nth categorical chart hex by series index. Index wraps
- * modulo `CATEGORICAL_PALETTE_TOKENS.length`.
+ * Parses `NEXT_PUBLIC_CHART_SERIES_PALETTE` (comma-separated hex colors) into
+ * the list series take colors from. Invalid entries are dropped with a
+ * warning so one typo doesn't discard the rest; an empty result keeps
+ * `COLORS`.
+ */
+export function parseSeriesPalette(raw: string): readonly string[] {
+  const entries = raw
+    .split(',')
+    .map(entry => entry.trim())
+    .filter(Boolean);
+  const invalid = entries.filter(entry => !HEX_COLOR.test(entry));
+  if (invalid.length > 0) {
+    console.warn(
+      `NEXT_PUBLIC_CHART_SERIES_PALETTE: ignoring invalid colors ${invalid.join(', ')}`,
+    );
+  }
+  const colors = entries.filter(entry => HEX_COLOR.test(entry));
+  return colors.length > 0 ? colors : COLORS;
+}
+
+const SERIES_COLORS = parseSeriesPalette(CHART_SERIES_PALETTE);
+
+/**
+ * Returns the Nth series hex by series index, wrapping modulo the palette
+ * length. The palette is `COLORS` unless `NEXT_PUBLIC_CHART_SERIES_PALETTE`
+ * replaces it.
  *
  * Reads from the JS palette directly. The matching `--color-chart-{hue}`
  * CSS var resolves to the same hex on every theme today, so the
@@ -504,8 +531,7 @@ export type { ChartPaletteToken };
  * `CATEGORICAL_HEX_BY_TOKEN`).
  */
 function getColorFromCSSVariable(index: number): string {
-  const i = index % CATEGORICAL_PALETTE_TOKENS.length;
-  return COLORS[i];
+  return SERIES_COLORS[index % SERIES_COLORS.length];
 }
 
 /**

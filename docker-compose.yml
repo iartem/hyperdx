@@ -91,6 +91,8 @@ services:
       # Uncomment and set to append a label to the browser tab title, e.g.
       # for operators running multiple instances (produces "HyperDX UK")
       # NEXT_PUBLIC_INSTANCE_LABEL: 'UK'
+      # Uncomment and set to replace the colors chart series take, in order
+      # NEXT_PUBLIC_CHART_SERIES_PALETTE: '#3ca951,#a463f2,#6cc5b0,#ff8ab7'
       DEFAULT_CONNECTIONS:
         '[{"name":"Local
         ClickHouse","host":"http://ch-server:8123","username":"default","password":""}]'

@@ -144,7 +144,10 @@ Internals worth knowing:
 
 - `getColorFromCSSVariable(index)` returns `COLORS[index % 10]` directly — no
   DOM read. Categorical hues are unified across themes, so the JS palette is
-  authoritative.
+  authoritative. A deployment can replace that positional list with
+  `NEXT_PUBLIC_CHART_SERIES_PALETTE` (comma-separated hex colors, parsed by
+  `parseSeriesPalette`); token-based colors (`getColorFromCSSToken`, the number
+  and table tile pickers) keep the stock hues.
 - `getColorFromCSSToken(token)` is split:
   - Categorical tokens (`chart-blue`, etc.) come straight from
     `CATEGORICAL_HEX_BY_TOKEN` — same shortcut, no `getComputedStyle`.
